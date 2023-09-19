@@ -1,10 +1,16 @@
 package com.application.librarymanagementsystem.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "books")
 public class Book {
@@ -37,6 +43,51 @@ public class Book {
     @JoinTable(name = "books_publishers",
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "publisher_id")})
+
     private Set<Publisher>publishers = new HashSet<Publisher>();
+
+    public Book(String isbn, String name, String description) {
+        this.isbn = isbn;
+        this.name = name;
+        this.description = description;
+    }
+
+    public void removePublisher(Publisher publisher)
+    {
+            this.publishers.remove(publisher);
+            publisher.getBooks().remove(publisher);
+    }
+
+    public void addPublisher(Publisher publisher)
+    {
+            this.publishers.add(publisher);
+            publisher.getBooks().add(this);
+    }
+
+
+    public void removeAuthor(Author author)
+    {
+            this.authors.remove(author);
+            author.getBooks().remove(author);
+    }
+
+    public void addAuthor(Author author)
+    {
+            this.authors.add(author);
+            author.getBooks().add(this);
+    }
+
+
+    public void removeCategory(Category category)
+    {
+            this.categories.remove(category);
+            category.getBooks().remove(category);
+    }
+
+    public void addCategory(Category category)
+    {
+            this.categories.add(category);
+            category.getBooks().add(this);
+    }
 
 }
